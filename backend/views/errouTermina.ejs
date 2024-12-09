@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Em Jogo - Flaggame</title>
+    <link rel="stylesheet" href="/css/emJogo.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/inicio">Sair</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="main-content">
+            <div class="scoreboard">
+                <!-- Mensagem de resultado removida -->
+            </div>
+
+            <div class="flag-container">
+                <img src="/img/ban-brasil.png" alt="Bandeira do Jogo" id="flag" class="flag">
+            </div>
+
+            <div class="options">
+                <button>opção 1</button>
+                <button>opção 2</button>
+                <button>opção 3</button>
+                <button>opção 4</button>
+            </div>
+        </div>
+    </main>
+
+    <footer></footer>
+
+    <script>
+        const brazilianStateFlags = [
+            { state: "Acre", image: "/img/bandeiras/AC.png" },
+            { state: "Alagoas", image: "/img/bandeiras/AL.png" },
+            { state: "Amapá", image: "/img/bandeiras/AP.png" },
+            { state: "Amazonas", image: "/img/bandeiras/AM.png" },
+            { state: "Bahia", image: "/img/bandeiras/BA.png" },
+            { state: "Ceará", image: "/img/bandeiras/CE.png" },
+            { state: "Distrito Federal", image: "/img/bandeiras/DF.png" },
+            { state: "Espírito Santo", image: "/img/bandeiras/ES.png" },
+            { state: "Goiás", image: "/img/bandeiras/GO.png" },
+            { state: "Maranhão", image: "/img/bandeiras/MA.png" },
+            { state: "Mato Grosso", image: "/img/bandeiras/MT.png" },
+            { state: "Mato Grosso do Sul", image: "/img/bandeiras/MS.png" },
+            { state: "Minas Gerais", image: "/img/bandeiras/MG.png" },
+            { state: "Pará", image: "/img/bandeiras/PA.png" },
+            { state: "Paraíba", image: "/img/bandeiras/PB.png" },
+            { state: "Paraná", image: "/img/bandeiras/PR.png" },
+            { state: "Pernambuco", image: "/img/bandeiras/PE.png" },
+            { state: "Piauí", image: "/img/bandeiras/PI.png" },
+            { state: "Rio de Janeiro", image: "/img/bandeiras/RJ.png" },
+            { state: "Rio Grande do Norte", image: "/img/bandeiras/RN.png" },
+            { state: "Rio Grande do Sul", image: "/img/bandeiras/RS.png" },
+            { state: "Rondônia", image: "/img/bandeiras/RO.png" },
+            { state: "Roraima", image: "/img/bandeiras/RR.png" },
+            { state: "Santa Catarina", image: "/img/bandeiras/SC.png" },
+            { state: "São Paulo", image: "/img/bandeiras/SP.png" },
+            { state: "Sergipe", image: "/img/bandeiras/SE.png" },
+            { state: "Tocantins", image: "/img/bandeiras/TO.png" },
+        ];
+
+        let correctCount = 0;  
+        let wrongCount = 0;   
+        let correctState;      
+        let startTime = Date.now(); 
+
+        function getRandomFlag() {
+            return brazilianStateFlags[Math.floor(Math.random() * brazilianStateFlags.length)];
+        }
+
+        function shuffle(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+
+        function setupGame() {
+            const flag = getRandomFlag();
+            correctState = flag.state; 
+            const optionsArea = document.querySelector(".options");
+            const allStates = shuffle([...brazilianStateFlags.map(f => f.state)]);
+            const displayedOptions = shuffle([correctState, ...allStates.filter(o => o !== correctState).slice(0, 3)]);
+
+            document.getElementById("flag").src = flag.image;
+            document.getElementById("flag").alt = "Bandeira de " + flag.state;
+
+            optionsArea.innerHTML = "";
+            displayedOptions.forEach(option => {
+                const button = document.createElement("button");
+                button.textContent = option;
+                button.addEventListener("click", () => checkAnswer(option)); 
+                optionsArea.appendChild(button);
+            });
+        }
+
+        function checkAnswer(selected) {
+            const buttons = document.querySelectorAll('.options button');
+
+            if (selected === correctState) {
+                correctCount++;
+                buttons.forEach(button => {
+                    if (button.textContent === selected) {
+                        button.classList.add('correct');
+                    } else {
+                        button.disabled = true;
+                    }
+                });
+
+                setTimeout(() => {
+                    buttons.forEach(button => {
+                        button.disabled = false;
+                        button.classList.remove('correct', 'wrong');
+                    });
+                    setupGame();
+                }, 2000);
+            } else {
+                wrongCount++;
+                buttons.forEach(button => {
+                    if (button.textContent === selected) {
+                        button.classList.add('wrong');
+                    }
+                    if (button.textContent === correctState) {
+                        button.classList.add('correct');  
+                    }
+                });
+
+                setTimeout(() => {
+                    showEndGame();
+                }, 2000);
+            }
+        }
+
+        function showEndGame() {
+            const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+
+            localStorage.setItem('correctCount', correctCount);
+            localStorage.setItem('wrongCount', wrongCount);
+            localStorage.setItem('elapsedTime', elapsedTime);
+
+            window.location.href = "../public/score.html";  
+        }
+
+        setupGame();
+    </script>
+
+</body>
+
+</html>

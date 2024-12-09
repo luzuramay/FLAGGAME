@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - FlagGame</title>
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/inicio">Início</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="main-content">
+            <img src="/img/planet-earth.png" alt="Planeta Terra">
+            <h2>Entrar no FlagGame</h2>
+            <form id="login-form">
+                <input type="email" id="email" placeholder="Email" required>
+                <input type="password" id="password" placeholder="Senha" required>
+                <button type="submit">Entrar</button>
+            </form>
+            <p id="response-message" style="color: red; display: none;"></p>
+            <p class="register-message">
+                Não tem uma conta? <a href="/cadastro">Cadastre-se</a>
+            </p>
+        </div>
+    </main>
+
+    <footer>
+    </footer>
+
+    <script src="/js/login.js"></script> <!-- Refere-se ao script que será colocado em /public/js/login.js -->
+</body>
+
+</html>
