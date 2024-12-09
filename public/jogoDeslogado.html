@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>início - flaggame </title>
+    <link rel="stylesheet" href="../css/emJogo.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/public/inicio.html">sair</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    
+    
+    <div class="icon-container">
+        <img src="../img/earth.png" alt="normalGame" class="icon">
+        <h1>Normal</h1>
+    </div>
+
+    <main>
+        <div class="main-content">
+            <div class="scoreboard">
+               
+            </div>
+
+            <div class="flag-container">
+                <img src="../img/ban-brasil.png" alt="Bandeira do Jogo" id="flag" class="flag">
+            </div>
+            
+            <div class="options">
+                <button>opções</button>
+                <button>opções</button>
+                <button>opções</button>
+                <button>opções</button>
+            </div>   
+
+        </div>
+    </main>
+
+    <script>
+        const brazilianStateFlags = [
+            { state: "Acre", image: "https://upload.wikimedia.org/wikipedia/commons/4/4c/Bandeira_do_Acre.svg" },
+            { state: "Alagoas", image: "https://upload.wikimedia.org/wikipedia/commons/8/88/Bandeira_de_Alagoas.svg" },
+            { state: "Amapá", image: "https://upload.wikimedia.org/wikipedia/commons/0/0c/Bandeira_do_Amap%C3%A1.svg" },
+            { state: "Amazonas", image: "https://upload.wikimedia.org/wikipedia/commons/6/6b/Bandeira_do_Amazonas.svg" },
+            { state: "Bahia", image: "https://upload.wikimedia.org/wikipedia/commons/2/28/Bandeira_da_Bahia.svg" },
+            { state: "Ceará", image: "https://upload.wikimedia.org/wikipedia/commons/2/2e/Bandeira_do_Cear%C3%A1.svg" },
+            { state: "Distrito Federal", image: "https://upload.wikimedia.org/wikipedia/commons/6/6c/Bandeira_do_Distrito_Federal_%28Brasil%29.svg" },
+            { state: "Espírito Santo", image: "https://upload.wikimedia.org/wikipedia/commons/4/43/Bandeira_do_Esp%C3%ADrito_Santo.svg" },
+            { state: "Goiás", image: "https://upload.wikimedia.org/wikipedia/commons/b/be/Bandeira_de_Goi%C3%A1s.svg" },
+            { state: "Maranhão", image: "https://upload.wikimedia.org/wikipedia/commons/4/45/Bandeira_do_Maranh%C3%A3o.svg" },
+            { state: "Mato Grosso", image: "https://upload.wikimedia.org/wikipedia/commons/0/0b/Bandeira_de_Mato_Grosso.svg" },
+            { state: "Mato Grosso do Sul", image: "https://upload.wikimedia.org/wikipedia/commons/6/64/Bandeira_de_Mato_Grosso_do_Sul.svg" },
+            { state: "Minas Gerais", image: "https://upload.wikimedia.org/wikipedia/commons/f/f4/Bandeira_de_Minas_Gerais.svg" },
+            { state: "Pará", image: "https://upload.wikimedia.org/wikipedia/commons/0/02/Bandeira_do_Par%C3%A1.svg" },
+            { state: "Paraíba", image: "https://upload.wikimedia.org/wikipedia/commons/b/bb/Bandeira_da_Para%C3%ADba.svg" },
+            { state: "Paraná", image: "https://upload.wikimedia.org/wikipedia/commons/9/93/Bandeira_do_Paran%C3%A1.svg" },
+            { state: "Pernambuco", image: "https://upload.wikimedia.org/wikipedia/commons/5/59/Bandeira_de_Pernambuco.svg" },
+            { state: "Piauí", image: "https://upload.wikimedia.org/wikipedia/commons/3/33/Bandeira_do_Piau%C3%AD.svg" },
+            { state: "Rio de Janeiro", image: "https://upload.wikimedia.org/wikipedia/commons/7/73/Bandeira_do_estado_do_Rio_de_Janeiro.svg" },
+            { state: "Rio Grande do Norte", image: "https://upload.wikimedia.org/wikipedia/commons/3/30/Bandeira_do_Rio_Grande_do_Norte.svg" },
+            { state: "Rio Grande do Sul", image: "https://upload.wikimedia.org/wikipedia/commons/6/63/Bandeira_do_Rio_Grande_do_Sul.svg" },
+            { state: "Rondônia", image: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Bandeira_de_Rond%C3%B4nia.svg" },
+            { state: "Roraima", image: "https://upload.wikimedia.org/wikipedia/commons/9/98/Bandeira_de_Roraima.svg" },
+            { state: "Santa Catarina", image: "https://upload.wikimedia.org/wikipedia/commons/1/1a/Bandeira_de_Santa_Catarina.svg" },
+            { state: "São Paulo", image: "https://upload.wikimedia.org/wikipedia/commons/9/99/Bandeira_do_estado_de_S%C3%A3o_Paulo.svg" },
+            { state: "Sergipe", image: "https://upload.wikimedia.org/wikipedia/commons/b/be/Bandeira_de_Sergipe.svg" },
+            { state: "Tocantins", image: "https://upload.wikimedia.org/wikipedia/commons/f/ff/Bandeira_do_Tocantins.svg" }
+        ];
+    
+        let correctCount = 0;
+        let wrongCount = 0;
+    
+        function getRandomFlag() {
+            return brazilianStateFlags[Math.floor(Math.random() * brazilianStateFlags.length)];
+        }
+    
+        function shuffle(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+    
+        function setupGame() {
+            const flag = getRandomFlag();
+            const optionsArea = document.querySelector(".options");
+            const correctOption = flag.state;
+            const allOptions = shuffle([...brazilianStateFlags.map(f => f.state)]);
+            const displayedOptions = shuffle([correctOption, ...allOptions.filter(o => o !== correctOption).slice(0, 3)]);
+    
+            document.getElementById("flag").src = flag.image;
+            document.getElementById("flag").alt = "Bandeira de " + flag.state;
+    
+            optionsArea.innerHTML = "";
+            displayedOptions.forEach(option => {
+                const button = document.createElement("button");
+                button.textContent = option;
+                button.addEventListener("click", () => checkAnswer(option, correctOption));
+                optionsArea.appendChild(button);
+            });
+        }
+    
+        function checkAnswer(selected, correct) {
+            const resultMessage = document.querySelector(".scoreboard");
+    
+            if (selected === correct) {
+                resultMessage.textContent = "🎉 Correto! Parabéns!";
+                correctCount++;
+            } else {
+                resultMessage.textContent = `❌ Errado! Era a bandeira de ${correct}.`;
+                wrongCount++;
+            }
+    
+            setTimeout(setupGame, 3000);
+        }
+    
+        setupGame();
+    </script>
+    
+
+    <footer>
+
+    </footer>
+</body>
+
+</html>

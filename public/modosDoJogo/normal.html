@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Início - Flaggame</title>
+    <link rel="stylesheet" href="../css/emJogo.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="../inicio.html">Sair</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="main-content">
+            <div class="scoreboard">
+                <span id="error-count">3</span>
+            </div>
+
+            <div class="flag-container">
+                <img src="../img/ban-brasil.png" alt="Bandeira do Jogo" id="flag" class="flag">
+            </div>
+
+            <div class="options">
+                <button>opção 1</button>
+                <button>opção 2</button>
+                <button>opção 3</button>
+                <button>opção 4</button>
+            </div>
+
+            <div id="result-message" class="result-message"></div>
+        </div>
+    </main>
+
+    <footer></footer>
+
+    <script>
+    const brazilianStateFlags = [
+    { state: "Acre", image: "../img/bandeiras/AC.png" },
+    { state: "Alagoas", image: "../img/bandeiras/AL.png" },
+    { state: "Amapá", image: "../img/bandeiras/AP.png" },
+    { state: "Amazonas", image: "../img/bandeiras/AM.png" },
+    { state: "Bahia", image: "../img/bandeiras/BA.png" },
+    { state: "Ceará", image: "../img/bandeiras/CE.png" },
+    { state: "Distrito Federal", image: "../img/bandeiras/DF.png" },
+    { state: "Espírito Santo", image: "../img/bandeiras/ES.png" },
+    { state: "Goiás", image: "../img/bandeiras/GO.png" },
+    { state: "Maranhão", image: "../img/bandeiras/MA.png" },
+    { state: "Mato Grosso", image: "../img/bandeiras/MT.png" },
+    { state: "Mato Grosso do Sul", image: "../img/bandeiras/MS.png" },
+    { state: "Minas Gerais", image: "../img/bandeiras/MG.png" },
+    { state: "Pará", image: "../img/bandeiras/PA.png" },
+    { state: "Paraíba", image: "../img/bandeiras/PB.png" },
+    { state: "Paraná", image: "../img/bandeiras/PR.png" },
+    { state: "Pernambuco", image: "../img/bandeiras/PE.png" },
+    { state: "Piauí", image: "../img/bandeiras/PI.png" },
+    { state: "Rio de Janeiro", image: "../img/bandeiras/RJ.png" },
+    { state: "Rio Grande do Norte", image: "../img/bandeiras/RN.png" },
+    { state: "Rio Grande do Sul", image: "../img/bandeiras/RS.png" },
+    { state: "Rondônia", image: "../img/bandeiras/RO.png" },
+    { state: "Roraima", image: "../img/bandeiras/RR.png" },
+    { state: "Santa Catarina", image: "../img/bandeiras/SC.png" },
+    { state: "São Paulo", image: "../img/bandeiras/SP.png" },
+    { state: "Sergipe", image: "../img/bandeiras/SE.png" },
+    { state: "Tocantins", image: "../img/bandeiras/TO.png" },
+];
+
+let correctState;
+let errorCount = 3;
+let correctCount = 0; // Variável para contar os acertos
+
+function shuffle(array) {
+    return array.sort(() => Math.random() - 0.5);
+}
+
+function getRandomFlag() {
+    return brazilianStateFlags[Math.floor(Math.random() * brazilianStateFlags.length)];
+}
+
+function setupGame() {
+    const flag = getRandomFlag();
+    correctState = flag.state;
+
+    document.getElementById("flag").src = flag.image;
+    document.getElementById("flag").alt = "Bandeira de " + flag.state;
+
+    const options = shuffle([
+        correctState,
+        ...brazilianStateFlags
+            .filter(f => f.state !== correctState)
+            .slice(0, 3)
+            .map(f => f.state),
+    ]);
+
+    const buttonsContainer = document.querySelector(".options");
+    buttonsContainer.innerHTML = "";
+
+    options.forEach(option => {
+        const button = document.createElement("button");
+        button.textContent = option;
+        button.addEventListener("click", () => checkAnswer(option, button));
+        buttonsContainer.appendChild(button);
+    });
+}
+
+function checkAnswer(selected, button) {
+    if (selected === correctState) {
+        button.classList.add("correct");
+        correctCount++; // Incrementa o contador de acertos
+        disableAllButtons();
+        setTimeout(setupGame, 2000);
+    } else {
+        errorCount--;
+        button.classList.add("wrong");
+        document.getElementById("error-count").textContent = errorCount;
+        if (errorCount <= 0) {
+            endGame();
+        }
+    }
+}
+
+function disableAllButtons() {
+    document.querySelectorAll(".options button").forEach(button => {
+        button.disabled = true;
+    });
+}
+
+function endGame() {
+    showEndGame();
+}
+
+function showEndGame() {
+    const resultMessageElement = document.getElementById("result-message");
+    resultMessageElement.textContent = "Fim de jogo!";
+
+    // Armazenar o número de acertos e erros no localStorage
+    localStorage.setItem('correctCount', correctCount); 
+    localStorage.setItem('wrongCount', 3 - errorCount); 
+
+    // Redirecionar para a página de score após 3 segundos
+    setTimeout(() => {
+        window.location.href = "../score.html";
+    }, 3000);
+}
+
+setupGame();
+
+    </script>
+</body>
+
+</html>

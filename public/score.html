@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Score - Flaggame</title>
+    <link rel="stylesheet" href="./css/score.css">
+</head>
+
+<body>
+
+    <main>
+        <div class="score-container">
+            <h1>Seu Score</h1>
+            <div class="score-box">
+                <p>Erros: <span class="score" id="wrongCount">0</span></p>
+                <p>Acertos: <span class="score" id="correctCount">0</span></p>
+                
+            </div>
+            <a href="../modosDeJogo.html" class="button">Jogar novamente</a>
+        </div>
+    </main>
+
+    <footer></footer>
+
+    <script>
+        // Recuperar os dados do localStorage
+        const correctCount = localStorage.getItem('correctCount');
+        const wrongCount = localStorage.getItem('wrongCount');
+       
+
+        // Atualizar os elementos da página com os dados
+        document.getElementById('correctCount').textContent = correctCount;
+        document.getElementById('wrongCount').textContent = wrongCount;
+        
+
+        // Limpar os dados do localStorage após usá-los
+        localStorage.removeItem('correctCount');
+        localStorage.removeItem('wrongCount');
+       
+    </script>
+</body>
+
+</html>
